@@ -9,6 +9,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.zipcodewilmington.streams.tools.ReflectionUtils;
+import com.zipcodewilmington.streams.tools.logging.LoggerHandler;
+import com.zipcodewilmington.streams.tools.logging.LoggerWarehouse;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+
+
 /**
  * Created by leon on 5/2/17.
  */
@@ -21,7 +38,27 @@ public class StreamFilter {
      */ //TODO - construct person stream of 100 person objects; startingCharacter is a random capital letter
     public StreamFilter() {
         this(Stream.empty(), null);
+
+
+        PersonFactory factory = new PersonFactory();
+
+        Person[] people = new Person[100];
+
+        for (int i = 0; i<100; i++) {
+
+            people[i] = factory.createRandomPerson();
+
+        }
+
     }
+
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
 
     /**
      * @param people - Array of person objects
@@ -29,6 +66,14 @@ public class StreamFilter {
      */ //TODO
     public StreamFilter(Person[] people, Character startingCharacter) {
         this(Stream.empty(), null);
+
+        PersonFactory factory = new PersonFactory();
+        
+        Stream stream = new Stream();
+
+        stream = people.stream().filter(m -> m.getName().startsWith(startingCharacter.toString()));
+
+
     }
 
     /**
@@ -37,6 +82,11 @@ public class StreamFilter {
      */ //TODO
     public StreamFilter(List<Person> people, Character startingCharacter) {
         this(Stream.empty(), null);
+
+
+
+        return people.stream().filter(m -> m.getName().startsWith(startingCharacter.toString()));
+
     }
 
 
@@ -82,6 +132,11 @@ public class StreamFilter {
      * @return an array of person object whose name starts with `this.startingCharacter`
      */ //TODO
     public Person[] toArrayMultiLine() {
+
+
+
+
+
         return null;
     }
 
